@@ -13,16 +13,16 @@ def is_enabled(value, default):
         return default
 
 # Bot Information
-API_ID = int(environ.get("API_ID", "26205215"))
-API_HASH = environ.get("API_HASH", "")
+API_ID = int(environ.get("API_ID", "27573283"))
+API_HASH = environ.get("API_HASH", "eca55c9f1b0a14260e0ee1978aa17b2b")
 BOT_TOKEN = environ.get("BOT_TOKEN", "")
 
 # force sub cahnel id
 AUTH_CHANNEL = [int(ch) if id_pattern.search(ch) else ch for ch in environ.get('AUTH_CHANNEL', '-1002183158596').split()]
 
 PICS = (environ.get('PICS', 'https://freeimage.host/i/d10VHep')).split() # Bot Start Picture
-ADMINS = [int(admin) if id_pattern.search(admin) else admin for admin in environ.get('ADMINS', '1178233430 1087068993').split()]
-BOT_USERNAME = environ.get("BOT_USERNAME", "R3volutionary_Bot") # without @
+ADMINS = [int(admin) if id_pattern.search(admin) else admin for admin in environ.get('ADMINS', '6371924437').split()]
+BOT_USERNAME = environ.get("BOT_USERNAME", "Movieswallah1_bot") # without @
 PORT = environ.get("PORT", "8080")
 
 # Clone Info :-
@@ -32,8 +32,8 @@ CLONE_DB_URI = environ.get("CLONE_DB_URI", "")
 CDB_NAME = environ.get("CDB_NAME", "")
 
 # Database Information
-DB_URI = environ.get("DB_URI", "mongodb+srv://ZahidNazir:ZahidNazir@1stcluster.1p0dlne.mongodb.net/?retryWrites=true&w=majority&appName=1stcluster")
-DB_NAME = environ.get("DB_NAME", "Course-Empire")
+DB_URI = environ.get("DB_URI", "mongodb+srv://ashwinimalaysian:5gRvQgPW4DRhlEpE@pehla.uuzwevb.mongodb.net/?retryWrites=true&w=majority&appName=pehla")
+DB_NAME = environ.get("DB_NAME", "pehla")
 
 # Auto Delete Information
 AUTO_DELETE_MODE = bool(environ.get('AUTO_DELETE_MODE', True)) # Set True or False
@@ -61,10 +61,10 @@ SHORTLINK_API = environ.get("SHORTLINK_API", "") # shortlink api
 VERIFY_TUTORIAL = environ.get("VERIFY_TUTORIAL", "") # how to open link 
 
 # Website Info:
-WEBSITE_URL_MODE = bool(environ.get('WEBSITE_URL_MODE', False)) # Set True or False
+WEBSITE_URL_MODE = bool(environ.get('WEBSITE_URL_MODE', True)) # Set True or False
 
 # If Website Url Mode Is True Then Fill All Required Variable, If False Then Don't Fill.
-WEBSITE_URL = environ.get("WEBSITE_URL", "") # For More Information Check Video On Yt - @Tech_VJ
+WEBSITE_URL = environ.get("WEBSITE_URL", "https://dramebaazbatman.blogspot.com/2025/02/telegram.html") # For More Information Check Video On Yt - @Tech_VJ
 
 # File Stream Config
 STREAM_MODE = bool(environ.get('STREAM_MODE', False)) # Set True or False
