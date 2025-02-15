@@ -18,7 +18,7 @@ API_HASH = environ.get("API_HASH", "eca55c9f1b0a14260e0ee1978aa17b2b")
 BOT_TOKEN = environ.get("BOT_TOKEN", "")
 
 # force sub cahnel id
-AUTH_CHANNEL = [int(ch) if id_pattern.search(ch) else ch for ch in environ.get('AUTH_CHANNEL', '-1002183158596').split()]
+AUTH_CHANNEL = [int(ch) if id_pattern.search(ch) else ch for ch in environ.get('AUTH_CHANNEL', '-1002302196864').split()]
 
 PICS = (environ.get('PICS', 'https://freeimage.host/i/d10VHep')).split() # Bot Start Picture
 ADMINS = [int(admin) if id_pattern.search(admin) else admin for admin in environ.get('ADMINS', '6371924437').split()]
@@ -43,7 +43,7 @@ AUTO_DELETE = int(environ.get("AUTO_DELETE", "2")) # Time in Minutes
 AUTO_DELETE_TIME = int(environ.get("AUTO_DELETE_TIME", "120")) # Time in Seconds
 
 # Channel Information
-LOG_CHANNEL = int(environ.get("LOG_CHANNEL", "-1002230949609"))
+LOG_CHANNEL = int(environ.get("LOG_CHANNEL", "-1002302196864"))
 
 # File Caption Information
 CUSTOM_FILE_CAPTION = environ.get("CUSTOM_FILE_CAPTION", f"{script.CAPTION}")
