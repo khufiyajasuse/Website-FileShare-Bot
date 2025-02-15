@@ -44,7 +44,6 @@ def get_size(size):
         size /= 1024.0
     return "%.2f %s" % (size, units[i])
 
-
 @Client.on_message(filters.command("start") & filters.incoming)
 async def start(client, message):
     if AUTH_CHANNEL:
@@ -68,6 +67,9 @@ async def start(client, message):
     if not await db.is_user_exist(message.from_user.id):
         await db.add_user(message.from_user.id, message.from_user.first_name)
         await client.send_message(LOG_CHANNEL, script.LOG_TEXT.format(message.from_user.id, message.from_user.mention))
+
+    if len(message.command) != 2:
+        return  # Ignore if command doesn't have a file ID
     
     data = message.command[1]
     try:
@@ -76,23 +78,38 @@ async def start(client, message):
         file_id = data
         pre = ""
 
-    # 🔥 Handle Single File Delivery (Auto-Delete Included)
+    # 🔥 Single File Delivery Fix (Auto-Delete & Proper Sending)
     file_data = await get_file_details(file_id)
     if file_data:
+        caption = file_data.get("caption", "")
+
+        # Replace Old Link with New Link in Caption
+        caption = caption.replace("https://t.me/Excellerators", "https://t.me/dramebaazbatman")
+
         sent_message = await client.send_cached_media(
             chat_id=message.from_user.id,
             file_id=file_data["file_id"],
-            caption=file_data.get("caption", ""),
+            caption=caption,
             protect_content=True if pre == 'filep' else False,
         )
 
-        # 🔥 Schedule Auto-Delete for Normal Files
+        # 🔥 Auto-Delete Single File After 2 Minutes (With Warning Message)
         if AUTO_DELETE_MODE:
-            asyncio.create_task(delete_file_after_delay(client, sent_message, AUTO_DELETE_TIME))
+            warning_message = await client.send_message(
+                chat_id=message.from_user.id,
+                text=f"<b>⚠️ This file will be deleted in {AUTO_DELETE} minutes. Please save it or send it to some other chat.</b>"
+            )
+            await asyncio.sleep(AUTO_DELETE_TIME)
+            try:
+                await sent_message.delete()
+                await warning_message.edit_text("<b>🗑 File deleted successfully!</b>")
+            except:
+                pass
         return
 
+    # 🔥 Batch File Handling (Fix Auto-Delete Message)
     if data.split("-", 1)[0] == "BATCH":
-        sts = await message.reply("**🔺 ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ**")
+        sts = await message.reply("**🔺 Please wait...**")
         file_id = data.split("-", 1)[1]
         msgs = BATCH_FILES.get(file_id)
         if not msgs:
@@ -112,7 +129,7 @@ async def start(client, message):
             size = get_size(int(msg.get("size", 0)))
             f_caption = msg.get("caption", "")
 
-            # 🔥 Change the link in batch file captions (Keep everything else the same)
+            # Replace Old Link with New Link in Caption
             f_caption = f_caption.replace("https://t.me/Excellerators", "https://t.me/dramebaazbatman")
 
             if f_caption is None:
@@ -142,23 +159,17 @@ async def start(client, message):
             await asyncio.sleep(1) 
         await sts.delete()
 
-        # 🔥 Auto-delete batch files after 2 minutes
+        # 🔥 Auto-Delete Batch Files After 2 Minutes (With Warning Message)
         if AUTO_DELETE_MODE:
+            warning_message = await client.send_message(
+                chat_id=message.from_user.id,
+                text=f"<b>⚠️ These files will be deleted in {AUTO_DELETE} minutes. Please save them or send them to some other chat.</b>"
+            )
             await asyncio.sleep(AUTO_DELETE_TIME)
             for x in filesarr:
                 try:
                     await x.delete()
                 except:
                     pass
-            await message.reply("🗑 File deleted automatically after 2 minutes!")
+            await warning_message.edit_text("<b>🗑 Files deleted successfully!</b>")
         return
-
-
-async def delete_file_after_delay(client, message, delay):
-    """Auto-delete function for both normal & batch files"""
-    await asyncio.sleep(delay)  # Wait for 2 minutes
-    try:
-        await message.delete()  # Delete file message
-        await message.reply("🗑 File deleted automatically after 2 minutes!")
-    except Exception as e:
-        print(f"Error deleting file: {e}")
