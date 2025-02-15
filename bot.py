@@ -45,6 +45,17 @@ ppath = "plugins/*.py"
 files = glob.glob(ppath)
 StreamBot.start()
 loop = asyncio.get_event_loop()
+from pyrogram import filters
+
+@StreamBot.on_message(filters.command("start"))
+async def start(bot, message):
+    # Extract the start parameter from the message
+    start_param = message.text.split(" ", 1)[-1] if " " in message.text else None
+
+    if start_param and start_param != "/start":
+        await message.reply_text(f"✅ Successfully started with: `{start_param}`")
+    else:
+        await message.reply_text("👋 Welcome! Send me a file to store.")
 
 
 
