@@ -62,15 +62,15 @@ async def start(client, message):
                 return
         except Exception as e:
             print(e)
-    
+
     username = (await client.get_me()).username
     if not await db.is_user_exist(message.from_user.id):
         await db.add_user(message.from_user.id, message.from_user.first_name)
         await client.send_message(LOG_CHANNEL, script.LOG_TEXT.format(message.from_user.id, message.from_user.mention))
 
     if len(message.command) != 2:
-        return  # Ignore if command doesn't have a file ID
-    
+        return  
+
     data = message.command[1]
     try:
         pre, file_id = data.split('_', 1)
@@ -78,13 +78,13 @@ async def start(client, message):
         file_id = data
         pre = ""
 
-    # 🔥 Single File Delivery Fix (Auto-Delete & Proper Sending)
+    # 🔥 Single File Delivery (With Auto-Delete)
     file_data = await get_file_details(file_id)
     if file_data:
         caption = file_data.get("caption", "")
 
-        # Replace Old Link with New Link in Caption
-        caption = caption.replace("https://t.me/Excellerators", "https://t.me/dramebaazbatman")
+        # Remove the specific line from caption
+        caption = caption.replace("\n\nExplore Our Empire Here (https://t.me/Excellerators)", "")
 
         sent_message = await client.send_cached_media(
             chat_id=message.from_user.id,
@@ -97,17 +97,17 @@ async def start(client, message):
         if AUTO_DELETE_MODE:
             warning_message = await client.send_message(
                 chat_id=message.from_user.id,
-                text=f"<b>⚠️ This file will be deleted in {AUTO_DELETE} minutes. You Are Requested to Forward The File to Saved Messages.</b>"
+                text=f"⚠️ This file will be deleted in {AUTO_DELETE} minutes. You Are Requested to Forward The File to Saved Messages."
             )
             await asyncio.sleep(AUTO_DELETE_TIME)
             try:
                 await sent_message.delete()
-                await warning_message.edit_text("<b>🗑 File deleted successfully! You are Always welcomed to Request Again</b>")
+                await warning_message.edit_text("File deleted successfully! You are Always welcomed to Request Again.")
             except:
                 pass
         return
 
-    # 🔥 Batch File Handling (Fix Auto-Delete Message)
+    # 🔥 Batch File Handling (With Auto-Delete Message)
     if data.split("-", 1)[0] == "BATCH":
         sts = await message.reply("**🔺 Please wait...**")
         file_id = data.split("-", 1)[1]
@@ -116,25 +116,25 @@ async def start(client, message):
             file = await client.download_media(file_id)
             try: 
                 with open(file) as file_data:
-                    msgs=json.loads(file_data.read())
+                    msgs = json.loads(file_data.read())
             except:
                 await sts.edit("FAILED")
                 return await client.send_message(LOG_CHANNEL, "UNABLE TO OPEN FILE.")
             os.remove(file)
             BATCH_FILES[file_id] = msgs
-            
+
         filesarr = []
         for msg in msgs:
             title = msg.get("title")
             size = get_size(int(msg.get("size", 0)))
             f_caption = msg.get("caption", "")
 
-            # Replace Old Link with New Link in Caption
-            f_caption = f_caption.replace("https://t.me/Excellerators", "https://t.me/dramebaazbatman")
+            # Remove the specific line from batch file captions
+            f_caption = f_caption.replace("\n\nExplore Our Empire Here (https://t.me/Excellerators)", "")
 
             if f_caption is None:
                 f_caption = f"{title}"
-            
+
             try:
                 msg = await client.send_cached_media(
                     chat_id=message.from_user.id,
@@ -143,7 +143,6 @@ async def start(client, message):
                     protect_content=msg.get('protect', False),
                 )
                 filesarr.append(msg)
-                
             except FloodWait as e:
                 await asyncio.sleep(e.x)
                 msg = await client.send_cached_media(
@@ -163,7 +162,7 @@ async def start(client, message):
         if AUTO_DELETE_MODE:
             warning_message = await client.send_message(
                 chat_id=message.from_user.id,
-                text=f"<b>⚠️ These files will be deleted in {AUTO_DELETE} minutes. Please save them or send them to some other chat.</b>"
+                text=f"⚠️ These files will be deleted in {AUTO_DELETE} minutes. You Are Requested to Forward The File to Saved Messages."
             )
             await asyncio.sleep(AUTO_DELETE_TIME)
             for x in filesarr:
@@ -171,5 +170,6 @@ async def start(client, message):
                     await x.delete()
                 except:
                     pass
-            await warning_message.edit_text("<b>🗑 Files deleted successfully!</b>")
+            await warning_message.edit_text("File deleted successfully! You are Always welcomed to Request Again.")
         return
+
