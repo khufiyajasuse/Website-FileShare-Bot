@@ -78,37 +78,8 @@ async def start(client, message):
         file_id = data
         pre = ""
 
-    # 🔥 Single File Delivery (With Auto-Delete)
-    file_data = await get_file_details(file_id)
-    if file_data:
-        caption = file_data.get("caption", "")
-
-        # Remove the specific line from caption
-        caption = caption.replace("\n\nExplore Our Empire Here (https://t.me/Excellerators)", "")
-
-        sent_message = await client.send_cached_media(
-            chat_id=message.from_user.id,
-            file_id=file_data["file_id"],
-            caption=caption,
-            protect_content=True if pre == 'filep' else False,
-        )
-
-        # 🔥 Auto-Delete Single File After 2 Minutes (With Warning Message)
-        if AUTO_DELETE_MODE:
-            warning_message = await client.send_message(
-                chat_id=message.from_user.id,
-                text=f"⚠️ This file will be deleted in 2 minutes. You Are Requested to Forward The File to Saved Messages."
-            )
-            await asyncio.sleep(AUTO_DELETE_TIME)
-            try:
-                await sent_message.delete()
-                await warning_message.edit_text("File deleted successfully! You are Always welcomed to Request Again.")
-            except:
-                pass
-        return
-
-    # 🔥 Batch File Handling (With Auto-Delete Message)
-    if data.split("-", 1)[0] == "BATCH":
+    # 🔥 Fix Batch File Handling
+    if data.startswith("BATCH-"):
         sts = await message.reply("**🔺 Please wait...**")
         file_id = data.split("-", 1)[1]
         msgs = BATCH_FILES.get(file_id)
@@ -125,15 +96,13 @@ async def start(client, message):
 
         filesarr = []
         for msg in msgs:
-            title = msg.get("title")
+            title = msg.get("title", "Unknown File")
             size = get_size(int(msg.get("size", 0)))
-            f_caption = msg.get("caption", "")
+            f_caption = msg.get("caption")
 
-            # Remove the specific line from batch file captions
-            f_caption = f_caption.replace("\n\nExplore Our Empire Here (https://t.me/Excellerators)", "")
-
+            # 🔥 Fix: If there's no caption, use the filename instead
             if f_caption is None:
-                f_caption = f"{title}"
+                f_caption = f"📂 ᴛɪᴛʟᴇ: {title}\n⚙️ ꜱɪᴢᴇ: {size}"
 
             try:
                 msg = await client.send_cached_media(
