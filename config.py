@@ -43,7 +43,7 @@ AUTO_DELETE = int(environ.get("AUTO_DELETE", "2")) # Time in Minutes
 AUTO_DELETE_TIME = int(environ.get("AUTO_DELETE_TIME", "120")) # Time in Seconds
 
 # Channel Information
-LOG_CHANNEL = int(environ.get("LOG_CHANNEL", "-1002302196864"))
+LOG_CHANNEL = int(environ.get("LOG_CHANNEL", "-1002358039534"))
 
 # File Caption Information
 CUSTOM_FILE_CAPTION = environ.get("CUSTOM_FILE_CAPTION", f"{script.CAPTION}")
