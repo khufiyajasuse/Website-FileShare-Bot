@@ -97,12 +97,12 @@ async def start(client, message):
         if AUTO_DELETE_MODE:
             warning_message = await client.send_message(
                 chat_id=message.from_user.id,
-                text=f"<b>⚠️ This file will be deleted in {AUTO_DELETE} minutes. Please save it or send it to some other chat.</b>"
+                text=f"<b>⚠️ This file will be deleted in {AUTO_DELETE} minutes. You Are Requested to Forward The File to Saved Messages.</b>"
             )
             await asyncio.sleep(AUTO_DELETE_TIME)
             try:
                 await sent_message.delete()
-                await warning_message.edit_text("<b>🗑 File deleted successfully!</b>")
+                await warning_message.edit_text("<b>🗑 File deleted successfully! You are Always welcomed to Request Again</b>")
             except:
                 pass
         return
