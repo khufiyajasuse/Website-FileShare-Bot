@@ -97,7 +97,7 @@ async def start(client, message):
         if AUTO_DELETE_MODE:
             warning_message = await client.send_message(
                 chat_id=message.from_user.id,
-                text=f"⚠️ This file will be deleted in {AUTO_DELETE} minutes. You Are Requested to Forward The File to Saved Messages."
+                text=f"⚠️ This file will be deleted in 2 minutes. You Are Requested to Forward The File to Saved Messages."
             )
             await asyncio.sleep(AUTO_DELETE_TIME)
             try:
@@ -162,7 +162,7 @@ async def start(client, message):
         if AUTO_DELETE_MODE:
             warning_message = await client.send_message(
                 chat_id=message.from_user.id,
-                text=f"⚠️ These files will be deleted in {AUTO_DELETE} minutes. You Are Requested to Forward The File to Saved Messages."
+                text=f"⚠️ These files will be deleted in 2 minutes. You Are Requested to Forward The File to Saved Messages."
             )
             await asyncio.sleep(AUTO_DELETE_TIME)
             for x in filesarr:
@@ -172,4 +172,3 @@ async def start(client, message):
                     pass
             await warning_message.edit_text("File deleted successfully! You are Always welcomed to Request Again.")
         return
-
