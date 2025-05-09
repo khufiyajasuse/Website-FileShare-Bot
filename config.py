@@ -22,7 +22,7 @@ AUTH_CHANNEL = [int(ch) if id_pattern.search(ch) else ch for ch in environ.get('
 
 PICS = (environ.get('PICS', 'https://freeimage.host/i/d10VHep')).split() # Bot Start Picture
 ADMINS = [int(admin) if id_pattern.search(admin) else admin for admin in environ.get('ADMINS', '6371924437').split()]
-BOT_USERNAME = environ.get("BOT_USERNAME", "Dusraclonebot") # without @
+BOT_USERNAME = environ.get("BOT_USERNAME", "Hijabi101010_bot") # without @
 PORT = environ.get("PORT", "8080")
 
 # Clone Info :-
